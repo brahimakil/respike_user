@@ -20,7 +20,6 @@ interface ProgressOverviewProps {
 
 export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) => {
   const currentVideo = videos.find(v => v.isCurrent);
-  const nextLockedVideo = videos.find(v => v.isLocked);
 
   return (
     <div className="progress-overview">
