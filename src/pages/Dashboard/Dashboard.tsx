@@ -40,10 +40,17 @@ export const Dashboard = () => {
   const fetchDashboardStats = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/subscriptions/my-subscription');
+      // Use the video-progress endpoint to get real-time data
+      const response = await api.get('/subscriptions/my-subscription/video-progress');
       
-      if (response.data && response.data !== '') {
-        const subscription = response.data;
+      console.log('🔍 DEBUG - Full Response:', response.data);
+      
+      if (response.data && response.data.subscription && response.data.progress) {
+        const subscription = response.data.subscription;
+        const progress = response.data.progress;
+        
+        console.log('🔍 DEBUG - Subscription:', subscription);
+        console.log('🔍 DEBUG - Progress:', progress);
         
         // Calculate days remaining - handle different date formats
         let endDate: Date;
@@ -63,22 +70,28 @@ export const Dashboard = () => {
         endDate.setHours(0, 0, 0, 0);
         
         const daysRemaining = Math.max(0, Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+        const isActive = daysRemaining > 0; // Consider active if there are days remaining
         
-        // Calculate progress percentage
-        const completedCount = subscription.completedVideos?.length || 0;
-        const totalCount = subscription.totalVideos || 0;
-        const calculatedProgress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+        console.log('✅ DEBUG - Setting stats:', {
+          strategyName: subscription.strategyName,
+          completedVideos: progress.completedCount,
+          totalVideos: progress.totalVideos,
+          progressPercentage: progress.progressPercentage,
+          daysRemaining,
+          isActive
+        });
         
         setStats({
-          hasActiveSubscription: subscription.status === 'active',
+          hasActiveSubscription: isActive,
           strategyName: subscription.strategyName || 'N/A',
-          completedVideos: completedCount,
-          totalVideos: totalCount,
-          progressPercentage: calculatedProgress,
-          subscriptionStatus: subscription.status,
+          completedVideos: progress.completedCount,
+          totalVideos: progress.totalVideos,
+          progressPercentage: progress.progressPercentage,
+          subscriptionStatus: isActive ? 'active' : 'expired',
           daysRemaining: isNaN(daysRemaining) ? 0 : daysRemaining,
         });
       } else {
+        console.log('❌ DEBUG - No subscription data in response');
         setStats({
           hasActiveSubscription: false,
           strategyName: '',
@@ -90,7 +103,17 @@ export const Dashboard = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      console.error('❌ DEBUG - Error fetching dashboard stats:', error);
+      // Set empty state on error
+      setStats({
+        hasActiveSubscription: false,
+        strategyName: '',
+        completedVideos: 0,
+        totalVideos: 0,
+        progressPercentage: 0,
+        subscriptionStatus: null,
+        daysRemaining: 0,
+      });
     } finally {
       setLoading(false);
     }
