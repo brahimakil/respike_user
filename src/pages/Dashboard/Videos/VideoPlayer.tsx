@@ -110,8 +110,8 @@ export const VideoPlayer = () => {
       const percentWatched = (currentTime / duration) * 100;
       setWatchProgress(Math.round(percentWatched));
       
-      // Auto-complete at 80%
-      if (percentWatched >= 80 && completionStatus === 'watching') {
+      // Auto-complete at 100%
+      if (percentWatched >= 99.9 && completionStatus === 'watching') {
         markVideoComplete();
       }
     }
@@ -143,8 +143,11 @@ export const VideoPlayer = () => {
   };
 
   const handleVideoEnd = async () => {
-    // Video completion is handled by the 80% threshold in handleTimeUpdate
-    // This ensures completion happens automatically without waiting for the video to fully end
+    // Video completion is handled by the 99.5% threshold in handleTimeUpdate
+    // This ensures completion happens when video is essentially finished
+    if (completionStatus === 'watching') {
+      markVideoComplete();
+    }
   };
 
 
@@ -153,7 +156,7 @@ export const VideoPlayer = () => {
       <div className="video-player-container">
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Loading video...</p>
+          <p>Loading lesson...</p>
         </div>
       </div>
     );
@@ -165,7 +168,7 @@ export const VideoPlayer = () => {
         <div className="error-state">
           <p>{error}</p>
           <button onClick={() => navigate('/dashboard/videos')} className="btn-primary">
-            ← Back to Videos
+            ← Back to Lessons
           </button>
         </div>
       </div>
@@ -180,10 +183,10 @@ export const VideoPlayer = () => {
     <div className="video-player-container">
       <div className="player-header">
         <button onClick={() => navigate('/dashboard/videos')} className="btn-back">
-          ← Back to Videos
+          ← Back to Lessons
         </button>
         <h1 className="video-title">
-          Video {video.videoNumber}: {video.title}
+          Lesson {video.videoNumber}: {video.title}
         </h1>
       </div>
 
@@ -207,7 +210,7 @@ export const VideoPlayer = () => {
         {completionStatus === 'completed' && (
           <div className="status-content">
             <span className="status-icon">✅</span>
-            <span className="status-text">Video Completed! Redirecting to videos list...</span>
+            <span className="status-text">Lesson Completed! Redirecting to lessons list...</span>
           </div>
         )}
       </div>

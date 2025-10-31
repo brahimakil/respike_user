@@ -55,9 +55,9 @@ export const Videos = () => {
     } catch (error: any) {
       console.error('Error fetching video progress:', error);
       if (error.response?.status === 400) {
-        setError('You need an active subscription to access videos');
+        setError('You need an active subscription to access lessons');
       } else {
-        setError('Failed to load videos');
+        setError('Failed to load lessons');
       }
     } finally {
       setLoading(false);
@@ -78,7 +78,7 @@ export const Videos = () => {
       <div className="videos-container">
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Loading your videos...</p>
+          <p>Loading your lessons...</p>
         </div>
       </div>
     );
@@ -100,7 +100,7 @@ export const Videos = () => {
   return (
     <div className="videos-container">
       <div className="videos-header">
-        <h1>📚 My Learning Path</h1>
+        <h1>📚 My Lessons</h1>
         {subscription && (
           <p className="strategy-name">
             Strategy {subscription.strategyNumber}: {subscription.strategyName}
@@ -122,7 +122,7 @@ export const Videos = () => {
         />
       ) : (
         <div className="empty-state">
-          <p>No videos available yet for this strategy</p>
+          <p>No lessons available yet for this strategy</p>
         </div>
       )}
     </div>

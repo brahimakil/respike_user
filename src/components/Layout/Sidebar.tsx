@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { MdDashboard, MdShowChart, MdPlayLesson, MdPerson } from 'react-icons/md';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -31,7 +32,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
-            <span className="nav-icon">📊</span>
+            <span className="nav-icon"><MdDashboard /></span>
             <span className="nav-text">Dashboard</span>
           </NavLink>
 
@@ -40,7 +41,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
-            <span className="nav-icon">📈</span>
+            <span className="nav-icon"><MdShowChart /></span>
             <span className="nav-text">Track</span>
           </NavLink>
 
@@ -49,8 +50,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
-            <span className="nav-icon">🎬</span>
-            <span className="nav-text">Videos</span>
+            <span className="nav-icon"><MdPlayLesson /></span>
+            <span className="nav-text">Lessons</span>
           </NavLink>
 
           <NavLink 
@@ -58,7 +59,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
-            <span className="nav-icon">👤</span>
+            <span className="nav-icon"><MdPerson /></span>
             <span className="nav-text">Profile</span>
           </NavLink>
         </nav>

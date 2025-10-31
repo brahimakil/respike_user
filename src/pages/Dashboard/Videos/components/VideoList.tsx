@@ -8,6 +8,7 @@ interface Video {
   isCurrent: boolean;
   isLocked: boolean;
   canAccess: boolean;
+  coverPhotoUrl?: string;
 }
 
 interface VideoListProps {
@@ -17,55 +18,53 @@ interface VideoListProps {
 
 export const VideoList = ({ videos, onVideoClick }: VideoListProps) => {
   return (
-    <div className="video-list">
+    <div className="video-grid">
       {videos.map((video) => (
         <div
           key={video.id}
-          className={`video-card ${video.isLocked ? 'locked' : ''} ${video.isCurrent ? 'current' : ''} ${video.isCompleted ? 'completed' : ''}`}
+          className={`video-card-grid ${video.isLocked ? 'locked' : ''} ${video.isCurrent ? 'current' : ''} ${video.isCompleted ? 'completed' : ''}`}
           onClick={() => onVideoClick(video)}
           style={{ cursor: video.canAccess ? 'pointer' : 'not-allowed' }}
         >
-          <div className="video-number">
-            {video.isCompleted && <span className="completed-badge">✓</span>}
-            {video.isCurrent && !video.isCompleted && (
-              <span className="current-badge">▶</span>
+          {/* Video Cover Photo */}
+          <div className="video-thumbnail">
+            {video.coverPhotoUrl ? (
+              <img src={video.coverPhotoUrl} alt={video.title} />
+            ) : (
+              <div className="video-placeholder">
+                <span className="video-icon">🎬</span>
+              </div>
             )}
-            {video.isLocked && <span className="locked-badge">🔒</span>}
-            {!video.isCompleted && !video.isCurrent && !video.isLocked && (
-              <span className="number-badge">{video.videoNumber}</span>
-            )}
-          </div>
-
-          <div className="video-info">
-            <h3 className="video-title">
-              Video {video.videoNumber}: {video.title}
-            </h3>
-            <p className="video-description">
-              {video.description}
-            </p>
-          </div>
-
-          <div className="video-status">
-            {video.isCompleted && (
-              <span className="status-badge completed-status">
-                Completed
-              </span>
-            )}
-            {video.isCurrent && !video.isCompleted && (
-              <span className="status-badge current-status">
-                Continue
-              </span>
-            )}
+            
+            {/* Lock Overlay */}
             {video.isLocked && (
-              <span className="status-badge locked-status">
-                Locked
-              </span>
+              <div className="lock-overlay">
+                <span className="lock-icon">🔒</span>
+              </div>
             )}
-            {!video.isCompleted && !video.isCurrent && !video.isLocked && (
-              <span className="status-badge ready-status">
-                Ready
-              </span>
-            )}
+
+            {/* Status Badge */}
+            <div className="video-badge">
+              {video.isCompleted && (
+                <span className="badge completed-badge">✓ Completed</span>
+              )}
+              {video.isCurrent && !video.isCompleted && (
+                <span className="badge current-badge">▶ Continue</span>
+              )}
+              {video.isLocked && (
+                <span className="badge locked-badge">🔒 Locked</span>
+              )}
+              {!video.isCompleted && !video.isCurrent && !video.isLocked && (
+                <span className="badge ready-badge">Ready</span>
+              )}
+            </div>
+          </div>
+
+          {/* Video Info */}
+          <div className="video-card-content">
+            <div className="video-number-label">Lesson {video.videoNumber}</div>
+            <h3 className="video-card-title">{video.title}</h3>
+            <p className="video-card-description">{video.description}</p>
           </div>
         </div>
       ))}

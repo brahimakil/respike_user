@@ -44,7 +44,7 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
           <div className="stat-icon">📹</div>
           <div className="stat-info">
             <span className="stat-value">{progress.totalVideos}</span>
-            <span className="stat-label">Total Videos</span>
+            <span className="stat-label">Total Lessons</span>
           </div>
         </div>
       </div>
@@ -57,13 +57,13 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
           ></div>
         </div>
         <span className="progress-text">
-          {progress.completedCount} of {progress.totalVideos} videos completed
+          {progress.completedCount} of {progress.totalVideos} lessons completed
         </span>
       </div>
 
       {currentVideo && (
         <div className="current-video-info">
-          <span className="current-label">📍 Current Video:</span>
+          <span className="current-label">📍 Current Lesson:</span>
           <span className="current-title">{currentVideo.title}</span>
         </div>
       )}
@@ -71,7 +71,7 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
       {progress.completedCount === progress.totalVideos && progress.totalVideos > 0 && (
         <div className="completion-message">
           <span className="completion-icon">🎉</span>
-          <span>Congratulations! You've completed all videos!</span>
+          <span>Congratulations! You've completed all lessons!</span>
         </div>
       )}
     </div>
