@@ -3,17 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import './Landing.css';
 
-interface Strategy {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  coverPhotoURL?: string;
-  strategyNumber: number;
-  expectedPeriodWeeks: number;
-  videoCount: number;
-}
-
 interface BannerSettings {
   imageUrl: string;
   text: string;
@@ -27,7 +16,6 @@ interface BannerSettings {
 
 export const Landing = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [bannerSettings, setBannerSettings] = useState<BannerSettings>({
     imageUrl: '',
     text: 'Master Trading with RE SPIKE',
@@ -97,7 +85,6 @@ export const Landing = () => {
 
   useEffect(() => {
     fetchBannerSettings();
-    setLoading(false);
   }, []);
 
   const fetchBannerSettings = async () => {
