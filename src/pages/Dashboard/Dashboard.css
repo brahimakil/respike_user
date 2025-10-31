@@ -89,16 +89,20 @@
   color: #9ca3af;
 }
 
-.stat-value {
+html:not(.dark-mode) .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  color: #111827;
+  color: #111827 !important;
   margin: 0 0 0.25rem 0;
   line-height: 1;
 }
 
-.dark-mode .stat-value {
-  color: #ffffff;
+html.dark-mode .stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff !important;
+  margin: 0 0 0.25rem 0;
+  line-height: 1;
 }
 
 .stat-label {
@@ -291,17 +295,22 @@
   margin-bottom: 2rem;
 }
 
-.progress-bar-header {
+html:not(.dark-mode) .progress-bar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #111827;
+  color: #111827 !important;
 }
 
-.dark-mode .progress-bar-header {
-  color: #ffffff;
+html.dark-mode .progress-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #ffffff !important;
 }
 
 .progress-bar {
@@ -332,13 +341,14 @@
   color: #d1d5db;
 }
 
-.stats-summary strong {
-  color: #111827;
+html:not(.dark-mode) .stats-summary strong {
+  color: #111827 !important;
   font-weight: 600;
 }
 
-.dark-mode .stats-summary strong {
-  color: #ffffff;
+html.dark-mode .stats-summary strong {
+  color: #ffffff !important;
+  font-weight: 600;
 }
 
 .stats-summary p {

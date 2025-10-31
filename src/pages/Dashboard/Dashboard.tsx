@@ -43,14 +43,9 @@ export const Dashboard = () => {
       // Use the video-progress endpoint to get real-time data
       const response = await api.get('/subscriptions/my-subscription/video-progress');
       
-      console.log('🔍 DEBUG - Full Response:', response.data);
-      
       if (response.data && response.data.subscription && response.data.progress) {
         const subscription = response.data.subscription;
         const progress = response.data.progress;
-        
-        console.log('🔍 DEBUG - Subscription:', subscription);
-        console.log('🔍 DEBUG - Progress:', progress);
         
         // Calculate days remaining - handle different date formats
         let endDate: Date;
@@ -72,15 +67,6 @@ export const Dashboard = () => {
         const daysRemaining = Math.max(0, Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
         const isActive = daysRemaining > 0; // Consider active if there are days remaining
         
-        console.log('✅ DEBUG - Setting stats:', {
-          strategyName: subscription.strategyName,
-          completedVideos: progress.completedCount,
-          totalVideos: progress.totalVideos,
-          progressPercentage: progress.progressPercentage,
-          daysRemaining,
-          isActive
-        });
-        
         setStats({
           hasActiveSubscription: isActive,
           strategyName: subscription.strategyName || 'N/A',
@@ -91,7 +77,6 @@ export const Dashboard = () => {
           daysRemaining: isNaN(daysRemaining) ? 0 : daysRemaining,
         });
       } else {
-        console.log('❌ DEBUG - No subscription data in response');
         setStats({
           hasActiveSubscription: false,
           strategyName: '',
@@ -103,7 +88,7 @@ export const Dashboard = () => {
         });
       }
     } catch (error) {
-      console.error('❌ DEBUG - Error fetching dashboard stats:', error);
+      console.error('Error fetching dashboard stats:', error);
       // Set empty state on error
       setStats({
         hasActiveSubscription: false,
@@ -173,7 +158,24 @@ export const Dashboard = () => {
             <div className="stat-icon">📚</div>
             <div className="stat-info">
               <h3>Current Strategy</h3>
-              <p className="stat-value">{stats.hasActiveSubscription ? stats.strategyName : 'None'}</p>
+              <p 
+                className="stat-value" 
+                id="debug-stat-value"
+                style={{ color: '#111827' }}
+                ref={(el) => {
+                  if (el) {
+                    const computed = window.getComputedStyle(el);
+                    console.log('🎨 Computed color for stat-value:', computed.color);
+                    console.log('🎨 Computed styles:', {
+                      color: computed.color,
+                      fontSize: computed.fontSize,
+                      fontWeight: computed.fontWeight
+                    });
+                  }
+                }}
+              >
+                {stats.hasActiveSubscription ? stats.strategyName : 'None'}
+              </p>
               <span className="stat-label">
                 {stats.subscriptionStatus === 'active' ? '✓ Active' : 
                  stats.subscriptionStatus === 'pending' ? '⏳ Pending' : 
@@ -186,7 +188,9 @@ export const Dashboard = () => {
             <div className="stat-icon">✅</div>
             <div className="stat-info">
               <h3>Completed Videos</h3>
-              <p className="stat-value">{stats.completedVideos} / {stats.totalVideos}</p>
+              <p className="stat-value" style={{ color: '#111827' }}>
+                {stats.completedVideos} / {stats.totalVideos}
+              </p>
               <span className="stat-label">Total watched</span>
             </div>
           </div>
@@ -195,7 +199,9 @@ export const Dashboard = () => {
             <div className="stat-icon">📈</div>
             <div className="stat-info">
               <h3>Progress</h3>
-              <p className="stat-value">{stats.progressPercentage}%</p>
+              <p className="stat-value" style={{ color: '#111827' }}>
+                {stats.progressPercentage}%
+              </p>
               <span className="stat-label">Overall completion</span>
             </div>
           </div>
@@ -204,7 +210,9 @@ export const Dashboard = () => {
             <div className="stat-icon">⏰</div>
             <div className="stat-info">
               <h3>Days Remaining</h3>
-              <p className="stat-value">{stats.hasActiveSubscription ? stats.daysRemaining : 0}</p>
+              <p className="stat-value" style={{ color: '#111827' }}>
+                {stats.hasActiveSubscription ? stats.daysRemaining : 0}
+              </p>
               <span className="stat-label">{stats.hasActiveSubscription ? 'Until renewal' : 'Subscribe to start'}</span>
             </div>
           </div>
@@ -217,7 +225,9 @@ export const Dashboard = () => {
               <div className="progress-bar-container">
                 <div className="progress-bar-header">
                   <span>Course Progress</span>
-                  <span>{stats.progressPercentage}%</span>
+                  <span style={{ color: '#111827' }}>
+                    {stats.progressPercentage}%
+                  </span>
                 </div>
                 <div className="progress-bar">
                   <div 
@@ -229,12 +239,20 @@ export const Dashboard = () => {
               
               <div className="stats-summary">
                 <p>
-                  You've completed <strong>{stats.completedVideos}</strong> out of <strong>{stats.totalVideos}</strong> videos 
-                  in the <strong>{stats.strategyName}</strong> strategy.
+                  You've completed <strong style={{ color: '#111827' }}>
+                    {stats.completedVideos}
+                  </strong> out of <strong style={{ color: '#111827' }}>
+                    {stats.totalVideos}
+                  </strong> videos 
+                  in the <strong style={{ color: '#111827' }}>
+                    {stats.strategyName}
+                  </strong> strategy.
                 </p>
                 {stats.subscriptionStatus === 'active' && stats.daysRemaining > 0 && (
                   <p className="highlight">
-                    ⏰ Your subscription renews in <strong>{stats.daysRemaining}</strong> day{stats.daysRemaining !== 1 ? 's' : ''}.
+                    ⏰ Your subscription renews in <strong style={{ color: '#111827' }}>
+                      {stats.daysRemaining}
+                    </strong> day{stats.daysRemaining !== 1 ? 's' : ''}.
                   </p>
                 )}
                 {stats.subscriptionStatus === 'pending' && (
