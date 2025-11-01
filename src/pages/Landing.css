@@ -1,6 +1,9 @@
 .landing-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #1A152E 0%, #2D1B4E 50%, #1A152E 100%);
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Navigation */
@@ -51,23 +54,36 @@
 
 /* Hero Section */
 .hero-section {
+  /* Desktop first (keeps current look) */
   padding: 0;
   text-align: center;
   position: relative;
   overflow: hidden;
-  height: 600px;
-  max-height: 600px;
+  width: 100%;
+  /* Use viewport height so banner scales without stretching the image */
+  height: 80vh;
+  max-height: 800px;
+  min-height: 480px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background-size: 100% 100% !important; /* stretch image to fit entire area */
+  background-position: center !important;
+  background-repeat: no-repeat !important;
 }
 
 .hero-section .container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
+  align-items: flex-end;
   height: 100%;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+  width: 100%;
+  max-width: 100%; /* full width, no centering */
+  padding: 0; /* remove padding, button has its own */
+  margin: 0;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .hero-section::before {
@@ -92,16 +108,20 @@
   position: relative;
   z-index: 1;
   flex: 1;
-  display: flex;
+  display: none; /* hide the text content, only show the button */
   flex-direction: column;
   justify-content: center;
 }
 
 .hero-cta-bottom-right {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  position: relative;
   z-index: 2;
+  margin: 0;
+  padding: 2rem; /* add padding so button doesn't touch corners */
+}
+
+.hero-cta-bottom-right .btn {
+  white-space: nowrap;
 }
 
 .hero-title {
@@ -686,20 +706,25 @@
   
   /* Hero Section */
   .hero-section {
-    height: auto;
-    min-height: 400px;
+    /* Tablet: keep banner tall but allow content flow */
+    height: 60vh;
+    min-height: 360px;
     max-height: none;
-    padding: 3rem 0;
-    background-size: cover;
-    background-position: center;
+    padding: 0;
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .hero-section .container {
-    height: auto;
+    height: 100%;
     min-height: auto;
-    padding: 2rem 1rem;
-    justify-content: center;
-    gap: 2rem;
+    padding: 1.5rem;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 0;
   }
 
   .hero-content {
@@ -722,16 +747,18 @@
   }
 
   .hero-cta-bottom-right {
-    position: static;
-    display: block;
-    text-align: center;
-    margin: 0 auto;
-    padding: 0;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin: 0;
+    padding: 1.5rem; /* padding for tablet */
+    z-index: 2;
   }
 
   .hero-cta-bottom-right .btn {
     width: auto;
-    min-width: 200px;
+    min-width: 180px;
     display: inline-block;
   }
 
@@ -886,12 +913,21 @@
 
   /* Hero Section */
   .hero-section {
-    min-height: 350px;
-    padding: 2rem 0;
+    /* Mobile: shorter hero for smaller screens */
+    height: 50vh;
+    min-height: 300px;
+    padding: 0;
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .hero-section .container {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
+    justify-content: flex-end;
+    align-items: flex-end;
   }
 
   .hero-title {
@@ -906,8 +942,14 @@
     margin-bottom: 1.25rem;
   }
 
+  .hero-cta-bottom-right {
+    padding: 1rem; /* padding for mobile */
+  }
+
   .hero-cta-bottom-right .btn {
-    min-width: 180px;
+    min-width: 160px;
+    max-width: 280px;
+    display: inline-block;
   }
   
   .btn-lg {
