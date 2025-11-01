@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useAuthStore } from '../store/authStore';
+import api from '../services/api';
 import './Auth.css';
 
 export const Login = () => {
@@ -21,14 +22,29 @@ export const Login = () => {
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      console.log('🔵 Calling backend API to login user...');
+      
+      // Call backend API to verify user login
+      const response = await api.post('/auth/user/login', {
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      console.log('✅ Backend response:', response.data);
+      
+      const { token } = response.data;
+      
+      if (!token) {
+        throw new Error('No token received from backend');
+      }
+      
+      console.log('🔵 Signing in with custom token...');
+      // Sign in with the custom token from backend
+      const userCredential = await signInWithCustomToken(auth, token);
+      console.log('✅ Successfully signed in as user:', userCredential.user.uid);
 
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem('userToken', token);
+      const idToken = await userCredential.user.getIdToken();
+      localStorage.setItem('userToken', idToken);
 
       setUser({
         uid: userCredential.user.uid,
@@ -39,15 +55,13 @@ export const Login = () => {
 
       navigate('/dashboard');
     } catch (error: any) {
-      console.error('Login error:', error);
-      if (error.code === 'auth/invalid-credential') {
-        setError('Invalid email or password');
-      } else if (error.code === 'auth/user-not-found') {
-        setError('No account found with this email');
-      } else if (error.code === 'auth/wrong-password') {
-        setError('Incorrect password');
-      } else if (error.code === 'auth/too-many-requests') {
-        setError('Too many failed attempts. Please try again later');
+      console.error('❌ User login error:', error);
+      
+      // Handle specific error messages
+      if (error.response?.status === 401) {
+        setError('Invalid credentials or insufficient permissions. User accounts only.');
+      } else if (error.response?.data?.message) {
+        setError(error.response.data.message);
       } else {
         setError('Failed to login. Please try again');
       }
