@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../../services/api';
 import './VideoPlayer.css';
-import { MdPlayArrow, MdHourglassEmpty, MdCheckCircle } from 'react-icons/md';
 
 interface Video {
   id: string;
@@ -195,7 +194,7 @@ export const VideoPlayer = () => {
       <div className={`video-status-bar ${completionStatus}`}>
         {completionStatus === 'watching' && (
           <div className="status-content">
-            <span className="status-icon"><MdPlayArrow /></span>
+            <span className="status-icon">▶️</span>
             <span className="status-text">Watching... ({watchProgress}%)</span>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${watchProgress}%` }}></div>
@@ -204,13 +203,13 @@ export const VideoPlayer = () => {
         )}
         {completionStatus === 'completing' && (
           <div className="status-content">
-            <span className="status-icon"><MdHourglassEmpty /></span>
+            <span className="status-icon">⏳</span>
             <span className="status-text">Marking as complete...</span>
           </div>
         )}
         {completionStatus === 'completed' && (
           <div className="status-content">
-            <span className="status-icon"><MdCheckCircle /></span>
+            <span className="status-icon">✅</span>
             <span className="status-text">Lesson Completed! Redirecting to lessons list...</span>
           </div>
         )}
@@ -223,6 +222,8 @@ export const VideoPlayer = () => {
           controls
           controlsList="nodownload"
           disablePictureInPicture
+          preload="auto"
+          playsInline
           onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
