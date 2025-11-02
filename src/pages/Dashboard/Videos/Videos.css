@@ -61,10 +61,34 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.progress-stats .stat-value {
+  color: #ffffff !important;
+}
+
+html:not(.dark-mode) .progress-stats .stat-value {
+  color: #ffffff !important;
+}
+
+.dark-mode .progress-stats .stat-value {
+  color: #ffffff !important;
+}
+
 .stat-label {
   font-size: 0.9rem;
   color: #ffffff !important;
   opacity: 0.95;
+}
+
+.progress-stats .stat-label {
+  color: #ffffff !important;
+}
+
+html:not(.dark-mode) .progress-stats .stat-label {
+  color: #ffffff !important;
+}
+
+.dark-mode .progress-stats .stat-label {
+  color: #ffffff !important;
 }
 
 .progress-bar-container {

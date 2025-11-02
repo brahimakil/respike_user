@@ -1,3 +1,5 @@
+import { MdCheckCircle, MdShowChart, MdOndemandVideo } from 'react-icons/md';
+
 interface Progress {
   totalVideos: number;
   completedCount: number;
@@ -25,7 +27,7 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
     <div className="progress-overview">
       <div className="progress-stats">
         <div className="stat-card">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon"><MdCheckCircle /></div>
           <div className="stat-info">
             <span className="stat-value">{progress.completedCount}</span>
             <span className="stat-label">Completed</span>
@@ -33,7 +35,7 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon"><MdShowChart /></div>
           <div className="stat-info">
             <span className="stat-value">{progress.progressPercentage}%</span>
             <span className="stat-label">Progress</span>
@@ -41,7 +43,7 @@ export const ProgressOverview = ({ progress, videos }: ProgressOverviewProps) =>
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📹</div>
+          <div className="stat-icon"><MdOndemandVideo /></div>
           <div className="stat-info">
             <span className="stat-value">{progress.totalVideos}</span>
             <span className="stat-label">Total Lessons</span>

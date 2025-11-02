@@ -1,11 +1,13 @@
+import { MdOndemandVideo, MdCalendarToday, MdCheckCircle, MdHourglassEmpty } from 'react-icons/md';
+
 interface Strategy {
   id: string;
   name: string;
   description: string;
   price: number;
-  strategyNumber: number;
+  number: number; // Backend returns 'number'
   coverPhotoURL?: string;
-  expectedPeriodWeeks?: number;
+  expectedWeeks?: number;
   videoCount?: number;
 }
 
@@ -31,7 +33,7 @@ export const StrategyCard = ({ strategy, currentSubscription, onSubscribe }: Str
 
   return (
     <div className={`strategy-card ${isSubscribed ? 'subscribed' : ''}`}>
-      <div className="strategy-badge">Strategy {strategy.strategyNumber}</div>
+      <div className="strategy-badge">Strategy {strategy.number}</div>
       
       {strategy.coverPhotoURL && (
         <div className="strategy-image">
@@ -45,12 +47,12 @@ export const StrategyCard = ({ strategy, currentSubscription, onSubscribe }: Str
         
         <div className="strategy-meta">
           <div className="meta-item">
-            <span className="meta-icon">🎬</span>
-            <span>{strategy.videoCount} Videos</span>
+            <span className="meta-icon"><MdOndemandVideo /></span>
+            <span>{strategy.videoCount || 0} Videos</span>
           </div>
           <div className="meta-item">
-            <span className="meta-icon">📅</span>
-            <span>{strategy.expectedPeriodWeeks} Weeks</span>
+            <span className="meta-icon"><MdCalendarToday /></span>
+            <span>{strategy.expectedWeeks || 0} Weeks</span>
           </div>
         </div>
         
@@ -61,14 +63,14 @@ export const StrategyCard = ({ strategy, currentSubscription, onSubscribe }: Str
         
         {isSubscribed && currentSubscription?.status === 'active' && (
           <div className="subscribed-badge">
-            <span className="badge-icon">✓</span>
+            <span className="badge-icon"><MdCheckCircle /></span>
             <span>Active Subscription</span>
           </div>
         )}
         
         {isSubscribed && currentSubscription?.status === 'pending' && (
           <div className="pending-badge">
-            <span className="badge-icon">⏳</span>
+            <span className="badge-icon"><MdHourglassEmpty /></span>
             <span>Pending Renewal</span>
           </div>
         )}

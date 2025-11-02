@@ -4,15 +4,16 @@ import { StrategyCard } from './components/StrategyCard';
 import { SubscriptionModal } from './components/SubscriptionModal';
 import { CurrentSubscription } from './components/CurrentSubscription';
 import './Track.css';
+import { MdInfo, MdWarning } from 'react-icons/md';
 
 interface Strategy {
   id: string;
   name: string;
   description: string;
   price: number;
-  strategyNumber: number;
+  number: number; // Backend returns 'number', we'll map it
   coverPhotoURL?: string;
-  expectedPeriodWeeks?: number;
+  expectedWeeks?: number;
   videoCount?: number;
 }
 
@@ -58,7 +59,7 @@ export const Track = () => {
     try {
       const response = await api.get('/strategies');
       const sortedStrategies = response.data.sort((a: Strategy, b: Strategy) => 
-        a.strategyNumber - b.strategyNumber
+        a.number - b.number
       );
       setStrategies(sortedStrategies);
     } catch (error) {
@@ -160,7 +161,7 @@ export const Track = () => {
 
           {subscription?.status === 'active' && (
             <div className="info-banner">
-              <span className="info-icon">ℹ️</span>
+              <span className="info-icon"><MdInfo /></span>
               <div>
                 <strong>Active Subscription</strong>
                 <p>You're currently subscribed to {subscription.strategyName}. You can upgrade to a higher plan or cancel anytime.</p>
@@ -170,7 +171,7 @@ export const Track = () => {
 
           {subscription?.status === 'pending' && (
             <div className="warning-banner">
-              <span className="warning-icon">⚠️</span>
+              <span className="warning-icon"><MdWarning /></span>
               <div>
                 <strong>Subscription Expired</strong>
                 <p>Your subscription has ended. Renew for $100 to continue or choose a different strategy.</p>
@@ -211,8 +212,8 @@ export const Track = () => {
             name: subscription.strategyName,
             description: '',
             price: 100, // Renewal fee
-            strategyNumber: 0,
-            expectedPeriodWeeks: 4,
+            number: 0,
+            expectedWeeks: 4,
             videoCount: 0,
           }}
           onClose={() => setShowRenewModal(false)}

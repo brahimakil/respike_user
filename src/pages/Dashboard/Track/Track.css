@@ -295,6 +295,14 @@
 
 .warning-icon {
   font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warning-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .warning-banner strong {
@@ -375,6 +383,14 @@
 
 .info-icon {
   font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .info-banner strong {
@@ -506,6 +522,14 @@
 
 .meta-icon {
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meta-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .strategy-price {
@@ -544,6 +568,17 @@
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.9375rem;
+}
+
+.badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .subscribed-badge {

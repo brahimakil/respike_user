@@ -70,6 +70,15 @@
 .stat-icon {
   font-size: 2.5rem;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+}
+
+.stat-icon svg {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .stat-info {
@@ -107,11 +116,15 @@ html.dark-mode .stat-value {
 
 .stat-label {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: #6b7280 !important;
+}
+
+html:not(.dark-mode) .stat-label {
+  color: #6b7280 !important;
 }
 
 .dark-mode .stat-label {
-  color: #9ca3af;
+  color: #9ca3af !important;
 }
 
 .section {
@@ -146,6 +159,15 @@ html.dark-mode .stat-value {
   font-size: 4rem;
   margin-bottom: 1rem;
   opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.empty-icon svg {
+  width: 4rem;
+  height: 4rem;
 }
 
 .empty-state h3 {
@@ -272,11 +294,27 @@ html.dark-mode .stat-value {
 
 .telegram-icon {
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.telegram-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .external-icon {
   font-size: 1.2rem;
   opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.external-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 /* Quick Stats Section */

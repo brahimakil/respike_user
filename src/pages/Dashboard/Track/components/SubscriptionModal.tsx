@@ -6,9 +6,9 @@ interface Strategy {
   name: string;
   description: string;
   price: number;
-  strategyNumber: number;
+  number: number; // Backend returns 'number'
   coverPhotoURL?: string;
-  expectedPeriodWeeks?: number;
+  expectedWeeks?: number;
   videoCount?: number;
 }
 
@@ -279,7 +279,7 @@ export const SubscriptionModal = ({
                               : `Free (Same price)`;
                             return (
                               <option key={s.id} value={s.id}>
-                                Strategy {s.strategyNumber}: {s.name} - ${s.price}/mo ({diffText})
+                                Strategy {s.number}: {s.name} - ${s.price}/mo ({diffText})
                               </option>
                             );
                           })}

@@ -38,7 +38,9 @@
 }
 
 .menu-toggle {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -47,6 +49,11 @@
   padding: 0.5rem;
   line-height: 1;
   transition: all 0.2s ease;
+}
+
+.menu-toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .menu-toggle:hover {
@@ -70,6 +77,9 @@
 }
 
 .theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -78,6 +88,16 @@
   cursor: pointer;
   transition: all 0.2s ease;
   line-height: 1;
+  color: #111827;
+}
+
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.dark-mode .theme-toggle {
+  color: #ffffff;
 }
 
 .theme-toggle:hover {
@@ -156,6 +176,9 @@
 }
 
 .logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: #ef4444;
   color: #ffffff;
@@ -165,6 +188,11 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.logout-btn svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .logout-btn:hover {

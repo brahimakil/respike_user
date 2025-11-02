@@ -4,6 +4,7 @@ import api from '../../../services/api';
 import { VideoList } from './components/VideoList';
 import { ProgressOverview } from './components/ProgressOverview';
 import './Videos.css';
+import { MdPlayLesson } from 'react-icons/md';
 
 interface Video {
   id: string;
@@ -100,7 +101,7 @@ export const Videos = () => {
   return (
     <div className="videos-container">
       <div className="videos-header">
-        <h1>📚 My Lessons</h1>
+        <h1><MdPlayLesson style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> My Lessons</h1>
         {subscription && (
           <p className="strategy-name">
             Strategy {subscription.strategyNumber}: {subscription.strategyName}

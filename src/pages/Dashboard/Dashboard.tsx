@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import './Dashboard.css';
+import { 
+  MdShowChart, 
+  MdCheckCircle, 
+  MdTrendingUp, 
+  MdAccessTime,
+  MdOpenInNew,
+  MdDescription
+} from 'react-icons/md';
+import { FaTelegram } from 'react-icons/fa';
 
 interface DashboardStats {
   hasActiveSubscription: boolean;
@@ -146,16 +155,16 @@ export const Dashboard = () => {
               rel="noopener noreferrer"
               className="telegram-button"
             >
-              <span className="telegram-icon">📱</span>
+              <span className="telegram-icon"><FaTelegram /></span>
               <span>{telegramSettings.label}</span>
-              <span className="external-icon">↗</span>
+              <span className="external-icon"><MdOpenInNew /></span>
             </a>
           </div>
         )}
 
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon">📚</div>
+            <div className="stat-icon"><MdShowChart /></div>
             <div className="stat-info">
               <h3>Current Strategy</h3>
               <p 
@@ -185,7 +194,7 @@ export const Dashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">✅</div>
+            <div className="stat-icon"><MdCheckCircle /></div>
             <div className="stat-info">
               <h3>Completed Videos</h3>
               <p className="stat-value" style={{ color: '#111827' }}>
@@ -196,7 +205,7 @@ export const Dashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📈</div>
+            <div className="stat-icon"><MdTrendingUp /></div>
             <div className="stat-info">
               <h3>Progress</h3>
               <p className="stat-value" style={{ color: '#111827' }}>
@@ -207,7 +216,7 @@ export const Dashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">⏰</div>
+            <div className="stat-icon"><MdAccessTime /></div>
             <div className="stat-info">
               <h3>Days Remaining</h3>
               <p className="stat-value" style={{ color: '#111827' }}>
@@ -264,7 +273,7 @@ export const Dashboard = () => {
             </div>
           ) : (
             <div className="empty-state">
-              <div className="empty-icon">📝</div>
+              <div className="empty-icon"><MdDescription /></div>
               <h3>No active subscription</h3>
               <p>Subscribe to a strategy to start your learning journey</p>
             </div>

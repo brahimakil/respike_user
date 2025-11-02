@@ -1,3 +1,5 @@
+import { MdLock, MdCheckCircle, MdPlayArrow, MdOndemandVideo } from 'react-icons/md';
+
 interface Video {
   id: string;
   title: string;
@@ -32,27 +34,27 @@ export const VideoList = ({ videos, onVideoClick }: VideoListProps) => {
               <img src={video.coverPhotoUrl} alt={video.title} />
             ) : (
               <div className="video-placeholder">
-                <span className="video-icon">🎬</span>
+                <span className="video-icon"><MdOndemandVideo /></span>
               </div>
             )}
             
             {/* Lock Overlay */}
             {video.isLocked && (
               <div className="lock-overlay">
-                <span className="lock-icon">🔒</span>
+                <span className="lock-icon"><MdLock /></span>
               </div>
             )}
 
             {/* Status Badge */}
             <div className="video-badge">
               {video.isCompleted && (
-                <span className="badge completed-badge">✓ Completed</span>
+                <span className="badge completed-badge"><MdCheckCircle /> Completed</span>
               )}
               {video.isCurrent && !video.isCompleted && (
-                <span className="badge current-badge">▶ Continue</span>
+                <span className="badge current-badge"><MdPlayArrow /> Continue</span>
               )}
               {video.isLocked && (
-                <span className="badge locked-badge">🔒 Locked</span>
+                <span className="badge locked-badge"><MdLock /> Locked</span>
               )}
               {!video.isCompleted && !video.isCurrent && !video.isLocked && (
                 <span className="badge ready-badge">Ready</span>

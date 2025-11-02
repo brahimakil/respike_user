@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar';
 import { auth } from '../../config/firebase';
 import { useAuthStore } from '../../store/authStore';
 import './DashboardLayout.css';
+import { MdMenu, MdLogout, MdLightMode, MdDarkMode } from 'react-icons/md';
 
 export const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,7 +47,7 @@ export const DashboardLayout = () => {
         {/* Top Bar */}
         <header className="topbar">
           <button className="menu-toggle" onClick={() => setSidebarOpen(true)}>
-            ☰
+            <MdMenu />
           </button>
 
           <div className="topbar-right">
@@ -55,7 +56,7 @@ export const DashboardLayout = () => {
               onClick={toggleDarkMode}
               title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {darkMode ? '☀️' : '🌙'}
+              {darkMode ? <MdLightMode /> : <MdDarkMode />}
             </button>
 
             <div className="user-menu">
@@ -69,7 +70,7 @@ export const DashboardLayout = () => {
                 <span className="user-email">{user?.email}</span>
               </div>
               <button className="logout-btn" onClick={handleLogout}>
-                Logout
+                <MdLogout /> Logout
               </button>
             </div>
           </div>
