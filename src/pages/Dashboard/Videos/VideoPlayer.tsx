@@ -112,13 +112,27 @@ export const VideoPlayer = () => {
       
       // Check buffer health to prevent stuttering
       if (videoRef.current.buffered.length > 0) {
-        const bufferedEnd = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
-        const bufferGap = bufferedEnd - currentTime;
+        // Find the correct buffered range for current playback position
+        let bufferGap = 0;
+        for (let i = 0; i < videoRef.current.buffered.length; i++) {
+          const start = videoRef.current.buffered.start(i);
+          const end = videoRef.current.buffered.end(i);
+          
+          // Check if current time is within this buffered range
+          if (currentTime >= start && currentTime <= end) {
+            bufferGap = end - currentTime;
+            break;
+          }
+        }
         
-        // If buffer is running low (less than 5 seconds ahead), slow down slightly
-        if (bufferGap < 5 && bufferGap > 0) {
-          // Browser will naturally handle this, just log for debugging
-          console.log('⚠️ Buffer running low:', bufferGap.toFixed(2), 'seconds');
+        // Log buffer status for debugging
+        if (bufferGap < 10 && bufferGap > 0) {
+          console.log('📊 Buffer status:', bufferGap.toFixed(2), 'seconds ahead');
+        }
+        
+        // Critical: if buffer is less than 1 second, we're about to stutter
+        if (bufferGap < 1 && bufferGap > 0) {
+          console.error('🔴 CRITICAL: Buffer critically low!', bufferGap.toFixed(2), 'seconds');
         }
       }
       
@@ -127,6 +141,14 @@ export const VideoPlayer = () => {
         markVideoComplete();
       }
     }
+  };
+
+  const handleSeeking = () => {
+    console.log('⏩ User seeking to new position...');
+  };
+
+  const handleSeeked = () => {
+    console.log('✅ Seek completed, resuming playback...');
   };
 
   const markVideoComplete = async () => {
@@ -234,17 +256,18 @@ export const VideoPlayer = () => {
           controls
           controlsList="nodownload"
           disablePictureInPicture
-          preload="metadata"
+          preload="auto"
           playsInline
+          autoPlay={false}
           onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
-          onLoadedMetadata={() => {
-            // Once metadata is loaded, start buffering more aggressively
-            if (videoRef.current) {
-              videoRef.current.load();
-            }
-          }}
+          onSeeking={handleSeeking}
+          onSeeked={handleSeeked}
+          onCanPlay={() => console.log('✅ Video can play')}
+          onWaiting={() => console.log('⏳ Video waiting/buffering...')}
+          onPlaying={() => console.log('▶️ Video playing')}
+          onStalled={() => console.log('🔴 Video stalled - network issue!')}
           poster={video.coverPhotoUrl}
         >
           <source src={video.videoUrl} type="video/mp4" />
