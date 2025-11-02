@@ -110,6 +110,18 @@ export const VideoPlayer = () => {
       const percentWatched = (currentTime / duration) * 100;
       setWatchProgress(Math.round(percentWatched));
       
+      // Check buffer health to prevent stuttering
+      if (videoRef.current.buffered.length > 0) {
+        const bufferedEnd = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
+        const bufferGap = bufferedEnd - currentTime;
+        
+        // If buffer is running low (less than 5 seconds ahead), slow down slightly
+        if (bufferGap < 5 && bufferGap > 0) {
+          // Browser will naturally handle this, just log for debugging
+          console.log('⚠️ Buffer running low:', bufferGap.toFixed(2), 'seconds');
+        }
+      }
+      
       // Auto-complete at 100%
       if (percentWatched >= 99.9 && completionStatus === 'watching') {
         markVideoComplete();
@@ -222,11 +234,17 @@ export const VideoPlayer = () => {
           controls
           controlsList="nodownload"
           disablePictureInPicture
-          preload="auto"
+          preload="metadata"
           playsInline
           onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
+          onLoadedMetadata={() => {
+            // Once metadata is loaded, start buffering more aggressively
+            if (videoRef.current) {
+              videoRef.current.load();
+            }
+          }}
           poster={video.coverPhotoUrl}
         >
           <source src={video.videoUrl} type="video/mp4" />
