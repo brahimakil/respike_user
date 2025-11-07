@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import Hls from 'hls.js';
 import api from '../../../services/api';
 import './VideoPlayer.css';
 
@@ -26,6 +27,8 @@ export const VideoPlayer = () => {
   const [isCompleting, setIsCompleting] = useState(false);
   const [completionStatus, setCompletionStatus] = useState<'watching' | 'completing' | 'completed'>('watching');
   const [watchProgress, setWatchProgress] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const hlsRef = useRef<Hls | null>(null);
 
   useEffect(() => {
     if (videoId) {
@@ -100,6 +103,92 @@ export const VideoPlayer = () => {
     }
   };
 
+  // Initialize HLS player when video is loaded
+  useEffect(() => {
+    if (!video || !videoRef.current) return;
+
+    const videoElement = videoRef.current;
+    const videoUrl = video.videoUrl;
+
+    // Check if video is HLS (Bunny.net) or MP4 (Firebase)
+    if (videoUrl.endsWith('.m3u8')) {
+      // HLS video from Bunny.net
+      console.log('🎬 Initializing HLS player for Bunny.net video');
+
+      if (Hls.isSupported()) {
+        // Destroy previous HLS instance if exists
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: false,
+          backBufferLength: 90,
+        });
+
+        hls.loadSource(videoUrl);
+        hls.attachMedia(videoElement);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log('✅ HLS manifest loaded, ready to play');
+        });
+
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          if (data.fatal) {
+            console.error('❌ Fatal HLS error:', data);
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.log('🔄 Network error, trying to recover...');
+                hls.startLoad();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.log('🔄 Media error, trying to recover...');
+                hls.recoverMediaError();
+                break;
+              default:
+                console.error('💥 Unrecoverable error');
+                hls.destroy();
+                break;
+            }
+          }
+        });
+
+        hlsRef.current = hls;
+      } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari)
+        console.log('🍎 Using native HLS support (Safari)');
+        videoElement.src = videoUrl;
+      }
+    } else {
+      // Regular MP4 video (old Firebase videos)
+      console.log('🎥 Loading MP4 video');
+      console.log('📹 Video URL:', videoUrl);
+      videoElement.src = videoUrl;
+      
+      // Add error event listener
+      videoElement.onerror = () => {
+        console.error('❌ Video load error:', {
+          error: videoElement.error,
+          code: videoElement.error?.code,
+          message: videoElement.error?.message,
+          url: videoUrl,
+        });
+      };
+      
+      videoElement.onloadeddata = () => {
+        console.log('✅ MP4 video loaded successfully');
+      };
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+    };
+  }, [video]);
+
   const handleTimeUpdate = () => {
     if (!videoRef.current || !video) return;
 
@@ -110,29 +199,28 @@ export const VideoPlayer = () => {
       const percentWatched = (currentTime / duration) * 100;
       setWatchProgress(Math.round(percentWatched));
       
-      // Check buffer health to prevent stuttering
+      // Check buffer health
       if (videoRef.current.buffered.length > 0) {
-        // Find the correct buffered range for current playback position
         let bufferGap = 0;
         for (let i = 0; i < videoRef.current.buffered.length; i++) {
           const start = videoRef.current.buffered.start(i);
           const end = videoRef.current.buffered.end(i);
           
-          // Check if current time is within this buffered range
           if (currentTime >= start && currentTime <= end) {
             bufferGap = end - currentTime;
             break;
           }
         }
         
-        // Log buffer status for debugging
-        if (bufferGap < 10 && bufferGap > 0) {
-          console.log('📊 Buffer status:', bufferGap.toFixed(2), 'seconds ahead');
-        }
-        
-        // Critical: if buffer is less than 1 second, we're about to stutter
-        if (bufferGap < 1 && bufferGap > 0) {
-          console.error('🔴 CRITICAL: Buffer critically low!', bufferGap.toFixed(2), 'seconds');
+        // Aggressive buffering strategy: pause if buffer is too low
+        if (bufferGap < 5 && !videoRef.current.paused && !isBuffering) {
+          console.log('⏸️ Pausing to buffer... (' + bufferGap.toFixed(1) + 's remaining)');
+          setIsBuffering(true);
+          videoRef.current.pause();
+        } else if (bufferGap > 15 && isBuffering) {
+          console.log('▶️ Resuming playback (buffer: ' + bufferGap.toFixed(1) + 's)');
+          setIsBuffering(false);
+          videoRef.current.play();
         }
       }
       
@@ -252,13 +340,12 @@ export const VideoPlayer = () => {
       <div className="player-wrapper">
         <video
           ref={videoRef}
+          key={video.videoUrl}
           className="video-element"
           controls
           controlsList="nodownload"
           disablePictureInPicture
-          preload="auto"
           playsInline
-          autoPlay={false}
           onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
@@ -268,9 +355,9 @@ export const VideoPlayer = () => {
           onWaiting={() => console.log('⏳ Video waiting/buffering...')}
           onPlaying={() => console.log('▶️ Video playing')}
           onStalled={() => console.log('🔴 Video stalled - network issue!')}
-          poster={video.coverPhotoUrl}
+          onError={(e) => console.error('❌ Video error:', e)}
         >
-          <source src={video.videoUrl} type="video/mp4" />
+          {/* Source will be set by HLS.js or directly for MP4 */}
           Your browser does not support the video tag.
         </video>
       </div>
