@@ -163,7 +163,6 @@ export const VideoPlayer = () => {
     } else {
       // Regular MP4 video (old Firebase videos)
       console.log('🎥 Loading MP4 video');
-      console.log('📹 Video URL:', videoUrl);
       videoElement.src = videoUrl;
       
       // Add error event listener
