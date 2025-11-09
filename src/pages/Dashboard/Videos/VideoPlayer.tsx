@@ -345,6 +345,7 @@ export const VideoPlayer = () => {
           controlsList="nodownload"
           disablePictureInPicture
           playsInline
+          poster={video.coverPhotoUrl}
           onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
