@@ -21,6 +21,7 @@ interface CurrentSubscriptionProps {
 export const CurrentSubscription = ({ subscription, onRefresh, onRenew, onUpgrade }: CurrentSubscriptionProps) => {
   const [showDetails, setShowDetails] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -43,13 +44,10 @@ export const CurrentSubscription = ({ subscription, onRefresh, onRenew, onUpgrad
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will lose access immediately.')) {
-      return;
-    }
-
     setLoading(true);
     try {
       await api.post('/subscriptions/my-subscription/cancel');
+      setShowCancelModal(false);
       alert('✅ Subscription cancelled successfully');
       onRefresh();
     } catch (error: any) {
@@ -155,14 +153,154 @@ export const CurrentSubscription = ({ subscription, onRefresh, onRenew, onUpgrad
               )}
 
               {subscription.status === 'pending' && (
-                <button 
-                  className="btn-action btn-renew"
-                  onClick={onRenew}
-                  disabled={loading}
-                >
-                  🔄 Renew Subscription ($100)
-                </button>
+                <>
+                  <button 
+                    className="btn-action btn-renew"
+                    onClick={onRenew}
+                    disabled={loading}
+                  >
+                    🔄 Renew Subscription ($100)
+                  </button>
+                  <button 
+                    className="btn-action btn-cancel"
+                    onClick={() => setShowCancelModal(true)}
+                    disabled={loading}
+                    style={{ marginTop: '10px' }}
+                  >
+                    ✕ Cancel Subscription
+                  </button>
+                </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Confirmation Modal */}
+      {showCancelModal && (
+        <div className="modal-overlay" onClick={() => setShowCancelModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{
+            maxWidth: '500px',
+            padding: '0',
+            borderRadius: '12px',
+            overflow: 'hidden'
+          }}>
+            {/* Header */}
+            <div style={{
+              background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
+              color: 'white',
+              padding: '24px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>⚠️</div>
+              <h2 style={{ margin: 0, fontSize: '24px', fontWeight: '700' }}>
+                IMPORTANT WARNING
+              </h2>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: '32px 24px', background: 'white' }}>
+              <p style={{ 
+                fontSize: '16px', 
+                lineHeight: '1.6', 
+                marginBottom: '24px',
+                color: '#000',
+                fontWeight: '500'
+              }}>
+                Canceling your subscription will have the following consequences:
+              </p>
+
+              <div style={{
+                background: '#fff8e1',
+                border: '2px solid #ff9800',
+                borderRadius: '8px',
+                padding: '20px',
+                marginBottom: '24px'
+              }}>
+                <ul style={{
+                  listStyle: 'none',
+                  padding: 0,
+                  margin: 0,
+                  fontSize: '15px',
+                  lineHeight: '2',
+                  color: '#000'
+                }}>
+                  <li style={{ marginBottom: '12px', color: '#000' }}>
+                    <span style={{ color: '#dc3545', fontWeight: '700', fontSize: '18px' }}>✕</span>
+                    {' '}Your current track will <strong style={{ color: '#000' }}>end completely</strong>
+                  </li>
+                  <li style={{ marginBottom: '12px', color: '#000' }}>
+                    <span style={{ color: '#dc3545', fontWeight: '700', fontSize: '18px' }}>✕</span>
+                    {' '}Your watch history and progress will be <strong style={{ color: '#000' }}>removed</strong>
+                  </li>
+                  <li style={{ marginBottom: '12px', color: '#000' }}>
+                    <span style={{ color: '#dc3545', fontWeight: '700', fontSize: '18px' }}>✕</span>
+                    {' '}You will <strong style={{ color: '#000' }}>LOSE the ability to pay less</strong> for upgrading to higher plans
+                  </li>
+                  <li style={{ color: '#000' }}>
+                    <span style={{ color: '#dc3545', fontWeight: '700', fontSize: '18px' }}>✕</span>
+                    {' '}You will need to <strong style={{ color: '#000' }}>start fresh</strong> if you subscribe again
+                  </li>
+                </ul>
+              </div>
+
+              <p style={{
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#dc3545',
+                textAlign: 'center',
+                marginBottom: '24px'
+              }}>
+                Are you absolutely sure you want to cancel?
+              </p>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                gap: '12px',
+                justifyContent: 'center'
+              }}>
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  style={{
+                    flex: 1,
+                    padding: '14px 24px',
+                    background: '#28a745',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#218838'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#28a745'}
+                >
+                  ← Keep My Subscription
+                </button>
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={loading}
+                  style={{
+                    flex: 1,
+                    padding: '14px 24px',
+                    background: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    opacity: loading ? 0.6 : 1,
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => !loading && (e.currentTarget.style.background = '#c82333')}
+                  onMouseOut={(e) => !loading && (e.currentTarget.style.background = '#dc3545')}
+                >
+                  {loading ? 'Cancelling...' : 'Yes, Cancel Forever'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
