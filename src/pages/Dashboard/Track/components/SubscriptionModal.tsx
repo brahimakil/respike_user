@@ -89,8 +89,18 @@ export const SubscriptionModal = ({
         });
       }
 
-      // Subscription created instantly - redirect immediately
-      console.log('✅ Subscription created!');
+      console.log('🔵 Payment response:', response.data);
+
+      // Check if we got a payment URL (3pa-y integration)
+      if (response.data.paymentUrl) {
+        console.log('💳 Redirecting to payment page:', response.data.paymentUrl);
+        // Redirect to 3pa-y payment page
+        window.location.href = response.data.paymentUrl;
+        return;
+      }
+
+      // Legacy: Subscription created instantly (test mode) - redirect immediately
+      console.log('✅ Subscription created instantly!');
       onSuccess();
     } catch (error: any) {
       console.error('Error creating subscription:', error);
