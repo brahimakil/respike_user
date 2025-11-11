@@ -101,9 +101,8 @@ export const Track = () => {
       console.log('✅ Payment verification response:', response.data);
       
       if (response.data.success) {
-        // Refresh subscription data
-        await fetchData();
-        alert('🎉 Payment successful! Your subscription is now active.');
+        // Force a complete page reload to show subscription
+        window.location.reload();
       } else {
         alert('⏳ Payment is being processed. Please wait a moment and refresh the page.');
       }
