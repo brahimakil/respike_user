@@ -94,6 +94,11 @@ export const SubscriptionModal = ({
       // Check if we got a payment URL (3pa-y integration)
       if (response.data.paymentUrl) {
         console.log('💳 Redirecting to payment page:', response.data.paymentUrl);
+        console.log('🆔 Transaction ID:', response.data.transactionId);
+        
+        // Store transaction ID in localStorage to verify when user returns
+        localStorage.setItem('pendingTransactionId', response.data.transactionId);
+        
         // Redirect to 3pa-y payment page
         window.location.href = response.data.paymentUrl;
         return;

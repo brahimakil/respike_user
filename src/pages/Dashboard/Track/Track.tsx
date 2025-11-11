@@ -39,6 +39,16 @@ export const Track = () => {
 
   useEffect(() => {
     fetchData();
+    
+    // Check if user just returned from payment page
+    // When 3pa-y redirects to callbackUrl, check localStorage for pending transaction
+    const pendingTransactionId = localStorage.getItem('pendingTransactionId');
+    
+    if (pendingTransactionId) {
+      console.log('🔍 Detected payment return, verifying transaction:', pendingTransactionId);
+      localStorage.removeItem('pendingTransactionId'); // Clear immediately to avoid loops
+      verifyPayment(pendingTransactionId);
+    }
   }, []);
 
   const fetchData = async () => {
@@ -81,6 +91,25 @@ export const Track = () => {
     } catch (error: any) {
       // Handle 404 or null response gracefully
       setSubscription(null);
+    }
+  };
+
+  const verifyPayment = async (transactionId: string) => {
+    try {
+      console.log('💳 Verifying payment with transaction ID:', transactionId);
+      const response = await api.get(`/payments/verify/3pay?transactionId=${transactionId}`);
+      console.log('✅ Payment verification response:', response.data);
+      
+      if (response.data.success) {
+        // Refresh subscription data
+        await fetchData();
+        alert('🎉 Payment successful! Your subscription is now active.');
+      } else {
+        alert('⏳ Payment is being processed. Please wait a moment and refresh the page.');
+      }
+    } catch (error: any) {
+      console.error('❌ Error verifying payment:', error);
+      alert('Failed to verify payment. Please contact support if you completed the payment.');
     }
   };
 
